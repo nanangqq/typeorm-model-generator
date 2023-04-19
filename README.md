@@ -1,3 +1,8 @@
+@nanangqq
+- PG driver ssl 옵션 수정
+- bin 명령어 typeorm-model-generator -> tmg 로 변경
+---
+
 # typeorm-model-generator
 
 [![npm version](https://badge.fury.io/js/typeorm-model-generator.svg)](https://badge.fury.io/js/typeorm-model-generator)

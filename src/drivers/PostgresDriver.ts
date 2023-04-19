@@ -647,7 +647,9 @@ export default class PostgresDriver extends AbstractDriver {
             host: connectionOptons.host,
             password: connectionOptons.password,
             port: connectionOptons.port,
-            ssl: connectionOptons.ssl,
+            ssl: connectionOptons.ssl
+                ? { rejectUnauthorized: false }
+                : undefined,
             statement_timeout: 60 * 60 * 1000,
             user: connectionOptons.user,
         });

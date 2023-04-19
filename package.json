@@ -1,8 +1,8 @@
 {
-  "name": "typeorm-model-generator",
-  "version": "0.4.6",
-  "description": "Generates models for TypeORM from existing databases.",
-  "bin": "bin/typeorm-model-generator",
+  "name": "@nanangqq/tmg",
+  "version": "0.4.6b",
+  "description": "Generates models for TypeORM from existing databases. PG driver ssl 옵션 수정.",
+  "bin": "bin/tmg",
   "main": "./dist/src/library.js",
   "types": "./dist/src/library.d.ts",
   "scripts": {
