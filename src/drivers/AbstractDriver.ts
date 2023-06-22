@@ -174,7 +174,8 @@ export default abstract class AbstractDriver {
         await this.ConnectToServer(connectionOptions);
         dbModel = await this.GetAllTables(
             connectionOptions.schemaNames,
-            connectionOptions.databaseNames
+            connectionOptions.databaseNames,
+            generationOptions
         );
         await this.GetCoulmnsFromEntity(
             dbModel,
@@ -223,7 +224,8 @@ export default abstract class AbstractDriver {
 
     public abstract GetAllTables(
         schemas: string[],
-        dbNames: string[]
+        dbNames: string[],
+        generationOptions?: IGenerationOptions
     ): Promise<Entity[]>;
 
     public static GetRelationsFromRelationTempInfo(

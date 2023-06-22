@@ -39,19 +39,31 @@ export default class PostgresDriver extends AbstractDriver {
 
     public async GetAllTables(
         schemas: string[],
-        dbNames: string[]
+        dbNames: string[],
+        generationOptions: IGenerationOptions
     ): Promise<Entity[]> {
+        const selectAllTables = generationOptions.noPartitionTables
+            ? `
+        SELECT 
+            table_schema as "TABLE_SCHEMA",table_name as "TABLE_NAME", table_catalog as "DB_NAME"
+        FROM INFORMATION_SCHEMA.TABLES t
+            left join pg_class c on t.table_name = c.relname
+        WHERE TABLE_TYPE='BASE TABLE'
+            and c.relpartbound is null
+            AND table_schema in (${PostgresDriver.buildEscapedObjectList(
+                schemas
+            )})`
+            : `
+        SELECT table_schema as "TABLE_SCHEMA",table_name as "TABLE_NAME", table_catalog as "DB_NAME" FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND table_schema in (${PostgresDriver.buildEscapedObjectList(
+            schemas
+        )})`;
+
         const response: {
             TABLE_SCHEMA: string;
             TABLE_NAME: string;
             DB_NAME: string;
-        }[] = (
-            await this.Connection.query(
-                `SELECT table_schema as "TABLE_SCHEMA",table_name as "TABLE_NAME", table_catalog as "DB_NAME" FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND table_schema in (${PostgresDriver.buildEscapedObjectList(
-                    schemas
-                )})`
-            )
-        ).rows;
+        }[] = (await this.Connection.query(selectAllTables)).rows;
+
         const ret: Entity[] = [];
         response.forEach((val) => {
             ret.push({
@@ -485,7 +497,7 @@ export default class PostgresDriver extends AbstractDriver {
         and i.relname notnull
         ORDER BY c.relname,f.attname;`)
         ).rows;
-        console.log(response);
+
         entities.forEach((ent) => {
             const entityIndices = response.filter(
                 (filterVal) => filterVal.tablename === ent.tscName
@@ -567,6 +579,9 @@ export default class PostgresDriver extends AbstractDriver {
                 information_schema.referential_constraints rc
               WHERE
                 att.attrelid = con.confrelid
+                and con.relname in (${entities
+                    .map((v) => `'${v.sqlName}'`)
+                    .join(",")})
                 AND att.attnum = con.child
                 AND cl.oid = con.confrelid
                 AND att2.attrelid = con.conrelid

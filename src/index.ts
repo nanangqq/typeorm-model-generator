@@ -204,6 +204,11 @@ function checkYargsParameters(options: options): options {
             default: options.generationOptions.noConfigs,
             describe: `Doesn't create tsconfig.json and ormconfig.json`,
         },
+        noPartitionTables: {
+            boolean: true,
+            default: options.generationOptions.noPartitionTables,
+            describe: `Doesn't create models for partitioned tables, create only master tables`,
+        },
         cf: {
             alias: "case-file",
             choices: ["pascal", "param", "camel", "none"],
@@ -338,6 +343,7 @@ function checkYargsParameters(options: options): options {
     options.generationOptions.lazy = argv.lazy;
     options.generationOptions.customNamingStrategyPath = argv.namingStrategy;
     options.generationOptions.noConfigs = argv.noConfig;
+    options.generationOptions.noPartitionTables = argv.noPartitionTables;
     options.generationOptions.propertyVisibility =
         argv.pv as IGenerationOptions["propertyVisibility"];
     options.generationOptions.relationIds = argv.relationIds;

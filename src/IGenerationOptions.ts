@@ -6,6 +6,7 @@ import path = require("path");
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export default interface IGenerationOptions {
+    noPartitionTables: boolean;
     resultsPath: string;
     pluralizeNames: boolean;
     noConfigs: boolean;
@@ -34,6 +35,7 @@ export function getDefaultGenerationOptions(): IGenerationOptions {
     const generationOptions: IGenerationOptions = {
         resultsPath: path.resolve(process.cwd(), "output"),
         pluralizeNames: true,
+        noPartitionTables: false,
         noConfigs: false,
         convertCaseFile: "pascal",
         convertCaseEntity: "pascal",
