@@ -11,3 +11,5 @@ coverage/
 dist
 *.tgz
 .tomg-config
+.DS_Store
+__tmg__

@@ -481,12 +481,11 @@ export default class PostgresDriver extends AbstractDriver {
         LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
         LEFT JOIN pg_index AS ix ON f.attnum = ANY(ix.indkey) and c.oid = f.attrelid and c.oid = ix.indrelid
         LEFT JOIN pg_class AS i ON ix.indexrelid = i.oid
-        WHERE c.relkind = 'r'::char
-        AND n.nspname in (${PostgresDriver.buildEscapedObjectList(schemas)})
-        AND f.attnum > 0
-        AND i.oid<>0
+        WHERE n.nspname in (${PostgresDriver.buildEscapedObjectList(schemas)})
+        and i.relname notnull
         ORDER BY c.relname,f.attname;`)
         ).rows;
+        console.log(response);
         entities.forEach((ent) => {
             const entityIndices = response.filter(
                 (filterVal) => filterVal.tablename === ent.tscName
